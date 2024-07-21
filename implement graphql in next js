@@ -1,0 +1,132 @@
+npm install @apollo/client graphql
+
+step 2 = go to layout.tsx = make this "use client";
+import { ApolloProvider } from "@apollo/client";
+import client from './lib/apolloClient';
+  <ApolloProvider client={client}>
+          {children}
+        </ApolloProvider>
+
+app/lib/apolloClient.js
+---------------------------
+// apollo-client.js
+import { ApolloClient, InMemoryCache } from '@apollo/client';
+
+const client = new ApolloClient({
+  uri: 'http://13.201.191.94:8000/graphql', // Your GraphQL server endpoint
+  cache: new InMemoryCache(),
+});
+
+export default client;
+
+goto any page
+-----------------
+"use client"
+// pages/index.tsx (or Home.tsx)
+import { useState } from 'react';
+import { useMutation,gql } from '@apollo/client';
+
+import Link from 'next/link';
+
+
+
+export const SIGNUP_USER = gql`
+mutation UserSignup($name: String!, $email: String!,$password: String!, $mobileNumber: String!) {
+  userSignup(name: $name, email: $email, password: $password, mobileNumber: $mobileNumber) {
+    message
+    user {
+      id
+      name
+      email
+      password
+      mobileNumber
+      isVerified
+      createdAt
+    }
+  }
+}
+`;
+
+const Home = () => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [rePassword, setRepassword] = useState('');
+  const [number, setNumber] = useState('');
+
+
+
+  const [userSignup, { loading, error, data }] = useMutation(SIGNUP_USER)
+
+  const handleSubmit = async (e:any) => {
+    e.preventDefault();
+   
+    try {
+      const { data } = await userSignup({
+        variables: {
+          name: name,
+          email: email,
+          password: password,
+          mobileNumber: number,
+        },
+      });
+      console.log('User signed up:', data);
+      // Handle successful signup (e.g., redirect user, show success message)
+
+      // Optionally reset form fields after successful submission
+      setName('');
+      setEmail('');
+      setPassword('');
+      setRepassword('');
+
+    } catch (error) {
+      console.error('Error signing up:', error);
+      // Handle error (e.g., show error message)
+    }
+  };
+  return (
+    <div>
+      <Link href="/about">About</Link>
+      <h3 className="text-green-500 border rounded border-green-500 m-2 p-2">Welcome to home page</h3>
+      <form method="post" onSubmit={handleSubmit}> 
+        <div className="flex items-center h-screen justify-center">
+          <div className="justify-center items-center ">
+            <div className="border rounded bg-slate-50 p-4">
+              <div>
+                <label>Username</label>
+                <input type="text" className="border border-gray-400 p-1 m-2 w-full" onChange={(e) => setName(e.target.value)} value={name}/>
+              </div>
+              <div>
+                <label>Email</label>
+                <input type="email" className="border border-gray-400 p-1 m-2 w-full" onChange={(e) => setEmail(e.target.value)} value={email}/>
+              </div>
+              <div>
+              <div>
+                <label>Mobile</label>
+                <input type="number" className="border border-gray-400 p-1 m-2 w-full" onChange={(e) => setNumber(e.target.value)} value={number}/>
+              </div>
+              <div>
+                <label>Password</label>
+                <input type="text" className="border border-gray-400 p-1 m-2 w-full" onChange={(e) => setPassword(e.target.value)} value={password}/>
+              </div>
+              <div>
+                <label>Re Enter Password</label>
+                <input type="text" className="border border-gray-400 p-1 m-2 w-full"onChange={(e) => setRepassword(e.target.value)}  value={rePassword}/>
+              </div>
+              
+              <div>
+              <button type="submit" disabled={loading}>
+                {loading ? 'Loading...' : 'Signup'}
+              </button>
+              {error && <p>Error: {error.message}</p>}
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+      </form>
+    </div>
+  )
+}
+
+export default Home
