@@ -1,0 +1,151 @@
+ "use client"
+import { useState } from "react"
+import { FormEvent } from "react";
+const Jobs = ()=>{
+   const[job_title, setJobTitle] = useState('');
+   const[job_link, setJobLink] = useState('');
+   const[job_location, setJobLocation] = useState('');
+   const[job_cat, setJobCat] = useState('');
+   const[job_type, setJobType] = useState('');
+   const[job_date, setJobDate] = useState('');
+   const[job_date_exp, setJobDateExp] = useState('');
+   const[job_salary, setJobSalary] = useState('');
+   const[job_exp_level, setJobExpLevel] = useState('');
+   const[career_level, setJobCareerLevel] = useState('');
+async function submitPost(event:any){
+    event.preventDefault();
+        const formData = new FormData();
+        formData.append('job_title', job_title);
+        formData.append('job_link', job_link);
+        formData.append('job_location', job_location);
+        formData.append('job_cat', job_cat);
+        formData.append('job_type', job_type);
+        formData.append('job_date', job_date);
+        formData.append('job_date_exp', job_date_exp);
+        formData.append('job_salary', job_salary);
+        formData.append('job_exp_level', job_exp_level);
+        formData.append('career_level', career_level);
+        try{
+
+            const response = await fetch('http://89.116.152.88:8000/api/jobs', {
+                method: 'POST',
+                body: formData
+            })
+            if(response.ok){
+                const data = await response.json();
+                console.log(data);
+            }else{
+                console.log('something went wrong');
+            }
+        }catch(error){
+            console.log(error);
+        }
+    }
+    return (
+        <div>
+            <h2>Post</h2>
+            <form method='post' onSubmit={submitPost}>
+
+            <div className='card-body'>
+
+                <div className='row'>
+                <div className='col-md-3'>
+                        <div className='form-group'>
+                            <label className='font-semibold'> Type</label>
+                            <input type='text' className='form-control' onChange={(e)=>setJobTitle(e.target.value)} value={job_title} />
+                               
+                        </div>
+                    </div>
+                    <div className='col-md-3'>
+                        <div className='form-group'>
+                           <label className='font-semibold'> Link</label>
+                            <input type='text' className='form-control' onChange={(e)=>setJobLink(e.target.value)} value={job_link} />
+                               
+
+
+                        </div>
+                    </div>
+
+                    <div className='col-md-3'>
+                        <div className='form-group'>
+                           
+                            <label className='font-semibold'> Location</label>
+                            <input type='text' className='form-control' onChange={(e)=>setJobLocation(e.target.value)} value={job_location} />
+                               
+                        </div>
+                    </div>
+
+                    <div className='col-md-3'>
+                        <div className='form-group'>
+                            <label className='font-semibold'> Cat</label>
+                            <input type='text' className='form-control' onChange={(e)=>setJobCat(e.target.value)} value={job_cat} />
+                               
+                        </div>
+                    </div>
+
+                </div>
+                <div className="row">
+                    <div className='col-md-12'>
+                        <div className='form-group'>
+                            <label className='font-semibold'>Type</label>
+                            <input type='text' className='form-control' onChange={(e)=>setJobType(e.target.value)} value={job_type} />
+                              
+                        </div>
+                    </div>
+                    <div className='col-md-12'>
+                        <div className='form-group'>
+                            <label className='font-semibold'>Post Date</label>
+                            <input type='date' className='form-control' onChange={(e)=>setJobDate(e.target.value)} value={job_date} />
+                              
+                        </div>
+                    </div>
+
+                    <div className='col-md-12'>
+                        <div className='form-group'>
+                        <label className='font-semibold'>Expiry Post Date</label>
+                            <input type='date' className='form-control' onChange={(e)=>setJobDateExp(e.target.value)} value={job_date_exp} />
+                              
+                        </div>
+                    </div>
+
+                    <div className='col-md-12'>
+                        <div className='form-group'>
+                            <label className='font-semibold'>Salary</label>
+                            <input type='text' className='form-control' onChange={(e)=>setJobSalary(e.target.value)} value={job_salary} />
+                              
+                        </div>
+                    </div>
+                    <div className='col-md-12'>
+                        <div className='form-group'>
+                            <label className='font-semibold'>Experience Level</label>
+                            <input type='text' className='form-control' onChange={(e)=>setJobExpLevel(e.target.value)} value={job_exp_level} />
+                              
+                        </div>
+                    </div>
+
+                    <div className='col-md-12'>
+                        <div className='form-group'>
+                            <label className='font-semibold'>Carrier Level</label>
+                            <input type='text' className='form-control' onChange={(e)=>setJobCareerLevel(e.target.value)} value={career_level} />
+                              
+                        </div>
+                    </div>
+
+                    
+                   
+                    
+                </div>
+
+            </div>
+            <div className='card-footer'>
+                <div className="text-right">
+                    <button type="clear" className='btn btn-warning mr-3'>Clear</button>
+                    <button type="submit" className='btn btn-primary'>Submit</button>
+                </div>
+            </div>
+            </form>
+        </div>
+    )
+}
+
+export default Jobs;
