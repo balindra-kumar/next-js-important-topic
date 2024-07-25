@@ -1,0 +1,77 @@
+"use client"
+import { useEffect } from "react";
+import Menu from "./menu/Menu";
+import { usePathname } from "next/navigation";
+const Header = ()=> {
+
+  const pathname = usePathname();
+
+  useEffect(() => {
+    if (!pathname.startsWith('/admin')) {
+      // Load additional scripts only for this route
+      const scriptUrls = [
+        "/assets/js/jquery-3.6.0.min.js",
+        "/assets/js/chosen.jquery.js",
+      "/assets/js/popper.min.js",
+      "/assets/js/bootstrap.min.js",
+      "/assets/js/magnific-popup.min.js",
+      "/assets/js/waypoints.min.js",
+      "/assets/js/counterup.min.js",
+      "/assets/js/waypoints-sticky.min.js",
+      "/assets/js/isotope.pkgd.min.js",
+      "/assets/js/imagesloaded.pkgd.min.js",
+      "/assets/js/owl.carousel.min.js",
+      "/assets/js/theia-sticky-sidebar.js",
+      "/assets/js/lc_lightbox.lite.js",
+      "/assets/js/bootstrap-select.min.js",
+      "/assets/js/dropzone.js",
+      "/assets/js/jquery.scrollbar.js",
+      "/assets/js/bootstrap-datepicker.js",
+      "/assets/js/jquery.dataTables.min.js",
+      "/assets/js/dataTables.bootstrap5.min.js",
+      "/assets/js/chart.js",
+      "/assets/js/bootstrap-slider.min.js",
+      "/assets/js/swiper-bundle.min.js",
+      "/assets/js/custom.js"
+      ];
+
+      scriptUrls.forEach(url => {
+        const script = document.createElement('script');
+        script.src = url;
+        script.async = true;
+        document.body.appendChild(script);
+
+        // Optionally handle script load or error
+        script.onload = () => console.log(`Loaded script: ${url}`);
+        script.onerror = () => console.error(`Error loading script: ${url}`);
+      });
+
+      // Clean up function
+      // return () => {
+      //   scriptUrls.forEach(url => {
+      //     const scripts = Array.from(document.querySelectorAll(`script[src="${url}"]`));
+      //     scripts.forEach(script => {
+      //       if (script.parentNode) {
+      //         document.body.removeChild(script);
+      //       }
+      //     });
+      //   });
+      // };
+    }
+  }, [pathname]);
+
+    return (
+        <>
+              {/* <!-- HEADER START --> */}
+              {!pathname.startsWith('/admin')?
+              <header className="site-header header-style-3 mobile-sider-drawer-menu">
+               
+             
+                <Menu/>
+
+              </header>
+              : null}
+        </>
+    )
+}
+export default Header;
